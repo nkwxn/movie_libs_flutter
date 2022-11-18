@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/genre_list/genre_list_page.dart';
+import 'package:movie_libs/features/genre_list/models/genre_list_model.dart';
+import 'package:movie_libs/features/movies_list/movies_list_page.dart';
 import 'package:movie_libs/helpers/themes/color_schemes.dart';
 
 void main() {
@@ -13,9 +15,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: GenreListPage(),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: lightColorScheme,
+        scaffoldBackgroundColor: lightColorScheme.background
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        scaffoldBackgroundColor: darkColorScheme.background
+      ),
+      initialRoute: GenreListPage.routeName,
+      routes: {
+        GenreListPage.routeName: (context) => const GenreListPage(),
+        MoviesListPage.routeName: (context) {
+          Genre genreArgs = ModalRoute.of(context)!.settings.arguments as Genre;
+          return MoviesListPage(
+            genre: genreArgs,
+          );
+        },
+      },
     );
   }
 }

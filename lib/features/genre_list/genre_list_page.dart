@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:movie_libs/features/genre_list/models/genre_list_model.dart';
+import 'package:movie_libs/features/movies_list/movies_list_page.dart';
 import 'package:movie_libs/helpers/networking/error_model.dart';
 import 'package:movie_libs/helpers/networking/movie_data_helper.dart';
+import 'package:movie_libs/helpers/reusable_views/error_screen.dart';
 
 class GenreListPage extends StatefulWidget {
-  GenreListPage({super.key});
+  static String routeName = '/';
+
+  const GenreListPage({super.key});
 
   @override
   State<GenreListPage> createState() => _GenreListPageState();
@@ -44,20 +48,10 @@ class _GenreListPageState extends State<GenreListPage> {
               size: 50.0,
             )
           : _error != null
-              ? buildErrorScreen()
+              ? ErrorScreen(error: _error!)
               : buildListView(),
     );
   }
-
-  Widget buildErrorScreen() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_error!.statusCode),
-            Text(_error!.statusMessage),
-          ],
-        ),
-      );
 
   ListView buildListView() => ListView.builder(
         itemCount: _genres.length,
@@ -65,6 +59,11 @@ class _GenreListPageState extends State<GenreListPage> {
           title: Text(_genres[index].name),
           onTap: () {
             // Redirect to Movie list with a respective genre
+            Navigator.pushNamed(
+              context,
+              MoviesListPage.routeName,
+              arguments: _genres[index],
+            );
           },
         ),
       );

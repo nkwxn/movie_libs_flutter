@@ -1,22 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:movie_libs/helpers/networking/error_model.dart';
+import 'package:movie_libs/helpers/networking/network_constants.dart';
 
-// class NetworkClient {
-//   static void getDataFromServer({
-//     required String path,
-//     Map<String, dynamic>? body,
-//     required Function(int statusCode, Map<String, dynamic> response) callback,
-//   }) async {
-//     http.Response response = await NetworkService().get(path, body);
-//     final statusCode = response.statusCode;
-//     final Map<String, dynamic> decodedResponse = json.decode(response.body);
-//     await callback(statusCode, decodedResponse);
-//   }
-// }
-
-class NetworkService {
-  Future<dynamic> get({
+class NetworkingHelper {
+  static Future<dynamic> get({
     required String path,
     Map<String, dynamic>? body,
   }) async {
@@ -25,9 +13,11 @@ class NetworkService {
     };
     if (body != null) {
       addedBody.addAll(body);
+      print(addedBody);
     }
-    Uri url = Uri.https('api.themoviedb.org', path, addedBody);
+    Uri url = Uri.https(kApiURL, path, addedBody);
     http.Response response = await http.get(url);
+    print(response.body);
     Map<String, dynamic> decodedJson = json.decode(response.body);
     if (response.statusCode == 200) {
       return decodedJson;

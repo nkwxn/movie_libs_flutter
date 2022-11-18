@@ -13,13 +13,13 @@ class GenreListResponse {
 }
 
 class Genre {
-  String id;
+  int id;
   String name;
 
   Genre(this.id, this.name);
 
   Genre.fromJson(Map<String, dynamic> json)
-      : id = json['id'].toString(),
+      : id = json['id'],
         name = json['name'].toString();
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name};
