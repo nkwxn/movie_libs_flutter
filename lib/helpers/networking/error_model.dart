@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class TMDBError {
   final bool success;
   final int? statusCode; // status_code

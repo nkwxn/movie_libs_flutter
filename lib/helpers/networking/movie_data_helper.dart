@@ -5,12 +5,23 @@ import 'package:movie_libs/helpers/networking/network_constants.dart';
 import 'package:movie_libs/helpers/networking/networking_helper.dart';
 
 class MovieDataHelper {
+  static Map<int, String> _genresMapData = {};
+
   static Future<dynamic> getGenreList() async {
     final genres = await NetworkingHelper.get(path: kGetGenres);
     if (genres is Map<String, dynamic>) {
-      return GenreListResponse.fromJson(genres).genres;
+      final genresResponse = GenreListResponse.fromJson(genres);
+      // _genresMapData = genresResponse.genres.map((e) => {e.id: e.name});
+      _genresMapData = {
+        for (Genre genre in genresResponse.genres) genre.id: genre.name,
+      };
+      return genresResponse.genres;
     }
     return genres;
+  }
+
+  static List<String> getGenreNames({required List<int> withGenreIDs}) {
+    return [for (int id in withGenreIDs) _genresMapData[id] ?? ''];
   }
 
   static Future<dynamic>? getMovieList({

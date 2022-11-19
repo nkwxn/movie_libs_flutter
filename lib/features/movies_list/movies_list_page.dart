@@ -44,31 +44,126 @@ class _MoviesListPageState extends State<MoviesListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.genre.name)),
-      body: buildListView(),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return orientation == Orientation.portrait
+              ? buildListView()
+              : buildGridView();
+        },
+      ),
     );
   }
 
 // Text(_movieList[index].title)
   ListView buildListView() {
     return ListView.builder(
-      // padding: EdgeInsets.all(10.0),
       itemCount: _movieList.length,
       itemBuilder: (context, index) => SizedBox(
-        height: 100,
-        child: ListTile(
-          leading: Image.network(MovieDataHelper.getImageURL(
-              path: _movieList[index].posterPath ?? '')),
+        height: 200,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0,
+            vertical: 5.0,
+          ),
+          child: MovieCard(movie: _movieList[index]),
         ),
       ),
     );
   }
 
 // Only apply this when orientation is vertical
-  GridView buildGridView() {
-    return GridView.builder(
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (context, index) => Container(),
+  Widget buildGridView() {
+    return SafeArea(
+      child: GridView.builder(
+        itemCount: _movieList.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisExtent: 10.0,
+          childAspectRatio: 1,
+        ),
+        itemBuilder: (context, index) => SizedBox(
+          height: 200,
+          child: MovieCard(movie: _movieList[index]),
+        ),
+      ),
+    );
+  }
+}
+
+class MovieCard extends StatelessWidget {
+  MovieCard({
+    Key? key,
+    required Movie movie,
+  })  : _movie = movie,
+        _genreNames =
+            MovieDataHelper.getGenreNames(withGenreIDs: movie.genreIDs),
+        super(key: key);
+
+  final Movie _movie;
+  final List<String> _genreNames;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(15.0),
+              bottomLeft: Radius.circular(15.0),
+            ),
+            child: Image.network(
+                MovieDataHelper.getImageURL(path: _movie.posterPath ?? '')),
+          ),
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _movie.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.titleMedium,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (String genre in _genreNames)
+                          Container(
+                            padding: EdgeInsets.all(4),
+                            color: Theme.of(context).colorScheme.background,
+                            child: Text(
+                              genre.toUpperCase(),
+                              style: textTheme.labelSmall,
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                  Text(
+                    _movie.overview,
+                    maxLines: 3,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
