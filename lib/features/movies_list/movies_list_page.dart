@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_libs/features/genre_list/models/genre_list_model.dart';
+import 'package:movie_libs/features/genre_list/genre_list_model.dart';
 import 'package:movie_libs/features/movies_list/movies_list_model.dart';
 import 'package:movie_libs/helpers/networking/error_model.dart';
 import 'package:movie_libs/helpers/networking/movie_data_helper.dart';
@@ -20,7 +20,6 @@ class _MoviesListPageState extends State<MoviesListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getMovieList();
   }
@@ -44,6 +43,7 @@ class _MoviesListPageState extends State<MoviesListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.genre.name)),
+      // body: buildGridView(),
       body: OrientationBuilder(
         builder: (context, orientation) {
           return orientation == Orientation.portrait
@@ -54,7 +54,6 @@ class _MoviesListPageState extends State<MoviesListPage> {
     );
   }
 
-// Text(_movieList[index].title)
   ListView buildListView() {
     return ListView.builder(
       itemCount: _movieList.length,
@@ -74,18 +73,16 @@ class _MoviesListPageState extends State<MoviesListPage> {
 // Only apply this when orientation is vertical
   Widget buildGridView() {
     return SafeArea(
+      bottom: false,
       child: GridView.builder(
         itemCount: _movieList.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisExtent: 10.0,
-          childAspectRatio: 1,
+          childAspectRatio: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
         ),
-        itemBuilder: (context, index) => SizedBox(
-          height: 200,
-          child: MovieCard(movie: _movieList[index]),
-        ),
+        itemBuilder: (context, index) => MovieCard(movie: _movieList[index]),
       ),
     );
   }

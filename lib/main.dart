@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/genre_list/genre_list_page.dart';
-import 'package:movie_libs/features/genre_list/models/genre_list_model.dart';
+import 'package:movie_libs/features/genre_list/genre_list_model.dart';
 import 'package:movie_libs/features/movies_list/movies_list_page.dart';
 import 'package:movie_libs/helpers/themes/color_schemes.dart';
 
