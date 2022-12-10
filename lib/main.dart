@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/genre_list/genre_list_page.dart';
 import 'package:movie_libs/features/genre_list/genre_list_model.dart';
+import 'package:movie_libs/features/movie_detail/movie_detail_page.dart';
 import 'package:movie_libs/features/movies_list/movies_list_page.dart';
 import 'package:movie_libs/helpers/themes/color_schemes.dart';
 
@@ -16,15 +17,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: lightColorScheme,
-        scaffoldBackgroundColor: lightColorScheme.background
-      ),
+          useMaterial3: true,
+          colorScheme: lightColorScheme,
+          scaffoldBackgroundColor: lightColorScheme.background),
       darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: darkColorScheme,
-        scaffoldBackgroundColor: darkColorScheme.background
-      ),
+          useMaterial3: true,
+          colorScheme: darkColorScheme,
+          scaffoldBackgroundColor: darkColorScheme.background),
       initialRoute: GenreListPage.routeName,
       routes: {
         GenreListPage.routeName: (context) => const GenreListPage(),
@@ -34,6 +33,10 @@ class MyApp extends StatelessWidget {
             genre: genreArgs,
           );
         },
+        MovieDetailPage.routeName: (context) {
+          // TODO: Please note to pass the Movie ID (?)
+          return MovieDetailPage();
+        }
       },
     );
   }
