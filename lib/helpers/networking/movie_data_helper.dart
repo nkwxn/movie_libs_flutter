@@ -1,5 +1,5 @@
-import 'package:movie_libs/features/genre_list/genre_list_model.dart';
-import 'package:movie_libs/features/movies_list/movies_list_model.dart';
+import 'package:movie_libs/helpers/models/genre_list_model.dart';
+import 'package:movie_libs/helpers/models/movies_list_model.dart';
 import 'package:movie_libs/helpers/networking/error_model.dart';
 import 'package:movie_libs/helpers/networking/network_constants.dart';
 import 'package:movie_libs/helpers/networking/networking_helper.dart';
@@ -11,7 +11,6 @@ class MovieDataHelper {
     final genres = await NetworkingHelper.get(path: kGetGenres);
     if (genres is Map<String, dynamic>) {
       final genresResponse = GenreListResponse.fromJson(genres);
-      // _genresMapData = genresResponse.genres.map((e) => {e.id: e.name});
       _genresMapData = {
         for (Genre genre in genresResponse.genres) genre.id: genre.name,
       };
@@ -36,6 +35,13 @@ class MovieDataHelper {
       return MovieListResponse.fromJson(movies);
     }
     return movies;
+  }
+
+  static Future<dynamic>? getMovieDetails({
+    required int movieId,
+  }) async {
+    final movieDetails = await NetworkingHelper.get(path: kGetMovieDetails(movieId: '$movieId'));
+    
   }
 
   static String getImageURL({required String path}) {

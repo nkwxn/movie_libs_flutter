@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/movie_detail/movie_detail_page.dart';
-import 'package:movie_libs/features/movies_list/movies_list_model.dart';
+import 'package:movie_libs/helpers/models/movies_list_model.dart';
 import 'package:movie_libs/helpers/networking/movie_data_helper.dart';
 
 class MovieCard extends StatelessWidget {
@@ -21,7 +21,7 @@ class MovieCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         debugPrint('${_movie.title} Tapped');
-        Navigator.pushNamed(context, MovieDetailPage.routeName);
+        Navigator.pushNamed(context, MovieDetailPage.routeName, arguments: _movie.id);
       },
       child: Card(
         shape: RoundedRectangleBorder(

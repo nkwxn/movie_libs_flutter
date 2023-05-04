@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_libs/features/genre_list/genre_list_model.dart';
-import 'package:movie_libs/features/movies_list/movies_list_model.dart';
+import 'package:movie_libs/helpers/models/movies_list_model.dart';
+import 'package:movie_libs/helpers/models/genre_list_model.dart';
 import 'package:movie_libs/features/movies_list/view_components/movie_card.dart';
 import 'package:movie_libs/helpers/networking/error_model.dart';
 import 'package:movie_libs/helpers/networking/movie_data_helper.dart';

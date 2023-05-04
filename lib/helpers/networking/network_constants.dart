@@ -5,3 +5,7 @@ const kImageURL = 'https://image.tmdb.org/t/p/w500';
 // Endpoints
 const kGetGenres = '/3/genre/movie/list';
 const kGetMovieList = '/3/discover/movie';
+
+String kGetMovieDetails({required String movieId}) {
+  return '/3/movie/$movieId';
+}

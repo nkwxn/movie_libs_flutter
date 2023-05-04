@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/genre_list/genre_list_page.dart';
-import 'package:movie_libs/features/genre_list/genre_list_model.dart';
+import 'package:movie_libs/helpers/models/genre_list_model.dart';
 import 'package:movie_libs/features/movie_detail/movie_detail_page.dart';
 import 'package:movie_libs/features/movies_list/movies_list_page.dart';
 import 'package:movie_libs/helpers/themes/color_schemes.dart';
@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
         },
         MovieDetailPage.routeName: (context) {
           // TODO: Please note to pass the Movie ID (?)
-          return MovieDetailPage();
+          int movieID = ModalRoute.of(context)!.settings.arguments as int;
+          return MovieDetailPage(movieId: movieID,);
         }
       },
     );
