@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:movie_libs/features/movie_detail/view_components/movie_detail_info_card.dart';
+import 'package:movie_libs/features/movie_detail/view_components/movie_info_text.dart';
+import 'package:movie_libs/features/movie_detail/view_components/movie_trailer_card.dart';
+import 'package:movie_libs/features/movie_detail/view_components/production_companies_card.dart';
 
 class MovieDetailPage extends StatefulWidget {
   static String routeName = '/movie_detail';
 
   int movieId;
+  String title;
 
-  MovieDetailPage({super.key, required this.movieId});
+  MovieDetailPage({super.key, required this.movieId, required this.title});
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -16,7 +20,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   double _scrollColorLerp = 0.0;
-  List<String> _tabs = [
+  final List<String> _tabs = [
     'Overview',
     'Trailers',
     'Reviews',
@@ -35,7 +39,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     final appTheme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movie ID: ${widget.movieId}'),
+        title: Text(widget.title),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -45,25 +49,34 @@ class _MovieDetailPageState extends State<MovieDetailPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabs.map((e) => tabSelectionView(e)).toList(),
+        children: _tabs.map((e) => tabSelectionView(context, e)).toList(),
       ),
     );
   }
 
-  Widget tabSelectionView(String title) {
+  Widget tabSelectionView(BuildContext context, String title) {
+    final appTheme = Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
+
     if (title == _tabs[0]) {
+      // Overview
       return SingleChildScrollView(
         child: SafeArea(
           top: false,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
+            padding: EdgeInsets.symmetric(vertical: 5.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image.network('https://s1.bukalapak.com/img/68286857232/large/Poster_Film___Avengers_Endgame___Marvel_Studios___Movie_Post.jpg'),
+                // Image of poster
+                Image.network(
+                    'https://s1.bukalapak.com/img/68286857232/large/Poster_Film___Avengers_Endgame___Marvel_Studios___Movie_Post.jpg'),
                 MovieDetailInfoCard(
                   title: 'Synopsis',
-                  content: Text('The synopsis text'),
+                  content: Container(
+                    width: double.infinity,
+                    child: Text('The synopsis text'),
+                  ),
                 ),
                 MovieDetailInfoCard(
                   title: 'Genres',
@@ -75,14 +88,16 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount:
                             3, // If genre count >= 3 then 3, otherwise genre count
-                        childAspectRatio: 4.0,
+                        childAspectRatio: 4.2,
                         mainAxisSpacing: 8.0,
                         crossAxisSpacing: 8.0,
                       ),
                       itemBuilder: (context, index) {
-                        // ColorScheme color =
                         return Container(
-                          color: Colors.blue,
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: appTheme.colorScheme.background,
+                              borderRadius: BorderRadius.circular(8)),
                           child: Center(child: Text('abc')),
                         );
                       },
@@ -92,40 +107,81 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                 MovieDetailInfoCard(
                   title: 'Information',
                   content: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Revenue'),
-                      Text('\$336,351,055.00'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Text('Release Date'),
-                              Text('Jan 7'),
-                              Text('2022'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text('Runtime'),
-                              Text('1h 43min'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text('User Score'),
-                              Text('86%'),
-                            ],
-                          ),
-                        ],
+                      MovieInfoText(
+                        useFlex: false,
+                        title: 'Revenue',
+                        content: Text(
+                          '\$336,351,055.00',
+                          style: appTheme.textTheme.headlineMedium,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MovieInfoText(
+                              useFlex: false,
+                              title: 'Release Date',
+                              content: Column(
+                                children: [
+                                  Text(
+                                    'Jan 7'.toUpperCase(),
+                                    style: appTheme.textTheme.labelSmall,
+                                  ),
+                                  Text(
+                                    '2022',
+                                    style: appTheme.textTheme.titleLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            MovieInfoText(
+                              useFlex: false,
+                              title: 'Runtime',
+                              content: Text(
+                                '1h 43min',
+                                style: appTheme.textTheme.headlineMedium,
+                              ),
+                            ),
+                            MovieInfoText(
+                              useFlex: false,
+                              title: 'User Score',
+                              content: Text(
+                                '86%',
+                                style: appTheme.textTheme.headlineLarge,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
                 MovieDetailInfoCard(
                   title: 'Production Companies',
-                  content: Text('Production Companies grid list'),
+                  content: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 3,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          3, // If prod company count >= 3 then 3, otherwise genre count
+                      childAspectRatio: 1.0,
+                      mainAxisSpacing: 8.0,
+                      crossAxisSpacing: 8.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      return const ProductionCompanyCard(
+                        imageUrl: 'https://picsum.photos/250?image=9',
+                        name: 'Name',
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -133,20 +189,36 @@ class _MovieDetailPageState extends State<MovieDetailPage>
         ),
       );
     } else if (title == _tabs[1]) {
-      return SafeArea(
-        top: false,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 4.0),
-          child: Text('Co'),
-        ),
+      // Trailer
+      return ListView.builder(
+        padding: mediaQuery.padding.copyWith(top: 5.0),
+        itemCount: 20, // Trailer counts, get data from API
+        itemBuilder: (context, index) {
+          return Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 5.0,
+            ),
+            child: const MovieTrailerCard(
+              youtubeID: 'GQyWIur03aw',
+            ),
+          );
+        },
       );
     } else if (title == _tabs[2]) {
-      return SafeArea(
-        top: false,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 4.0),
-          child: Text('eek'),
-        ),
+      // Reviews
+      return ListView.builder(
+        padding: mediaQuery.padding.copyWith(top: 5.0),
+        itemCount: 20, // Review count, get data from API
+        itemBuilder: (context, index) {
+          return Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 5.0,
+            ),
+            child: MovieReviewCard(),
+          );
+        },
       );
     } else {
       return Center(child: Text('Index not found'));
@@ -154,31 +226,43 @@ class _MovieDetailPageState extends State<MovieDetailPage>
   }
 }
 
-class MovieDetailInfoCard extends StatelessWidget {
-  final String title;
-  final Widget content;
-  MovieDetailInfoCard({super.key, required this.title, required this.content});
+class MovieReviewCard extends StatelessWidget {
+  const MovieReviewCard({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Card(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                CircleAvatar(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Name'),
+                      Text('username'),
+                    ],
+                  ),
                 ),
-                content,
               ],
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text('Review text'),
+            ),
+            Text('date'),
+          ],
         ),
       ),
     );

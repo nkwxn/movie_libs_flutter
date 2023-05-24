@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_libs/features/genre_list/genre_list_page.dart';
+import 'package:movie_libs/features/video_player/video_player_page.dart';
 import 'package:movie_libs/helpers/models/genre_list_model.dart';
 import 'package:movie_libs/features/movie_detail/movie_detail_page.dart';
 import 'package:movie_libs/features/movies_list/movies_list_page.dart';
@@ -35,8 +36,17 @@ class MyApp extends StatelessWidget {
         },
         MovieDetailPage.routeName: (context) {
           // TODO: Please note to pass the Movie ID (?)
-          int movieID = ModalRoute.of(context)!.settings.arguments as int;
-          return MovieDetailPage(movieId: movieID,);
+          // int movieID = ModalRoute.of(context)!.settings.arguments as int;
+          Map<String, dynamic> movieDetail = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return MovieDetailPage(
+            movieId: movieDetail['id'] as int,
+            title: movieDetail['title'] as String,
+          );
+        },
+        VideoPlayerPage.routeName: (context) {
+          // TODO: Pass the YT Video ID (?)
+          String videoId = ModalRoute.of(context)!.settings.arguments as String;
+          return VideoPlayerPage(videoId: videoId);
         }
       },
     );

@@ -18,10 +18,15 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
-        debugPrint('${_movie.title} Tapped');
-        Navigator.pushNamed(context, MovieDetailPage.routeName, arguments: _movie.id);
+        Map<String, dynamic> movieDetail = {
+          'id' : _movie.id,
+          'title' : _movie.title,
+        };
+        Navigator.pushNamed(context, MovieDetailPage.routeName,
+            arguments: movieDetail);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -49,6 +54,7 @@ class MovieCard extends StatelessWidget {
                       _movie.title,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.titleMedium,
+                      maxLines: 1,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -58,8 +64,13 @@ class MovieCard extends StatelessWidget {
                         children: [
                           for (String genre in _genreNames)
                             Container(
+                              decoration: BoxDecoration(
+                                color: colorScheme.background,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4),
+                                ),
+                              ),
                               padding: EdgeInsets.all(4),
-                              color: Theme.of(context).colorScheme.background,
                               child: Text(
                                 genre.toUpperCase(),
                                 style: textTheme.labelSmall,

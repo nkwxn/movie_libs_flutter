@@ -54,6 +54,7 @@ class _MoviesListPageState extends State<MoviesListPage> {
 
   ListView buildListView() {
     return ListView.builder(
+      padding: MediaQuery.of(context).padding.copyWith(top: 5.0),
       itemCount: _movieList.length,
       itemBuilder: (context, index) => SizedBox(
         height: 200,
@@ -73,7 +74,7 @@ class _MoviesListPageState extends State<MoviesListPage> {
     return SafeArea(
       bottom: false,
       child: GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: MediaQuery.of(context).padding.copyWith(left: 10, right: 10),
         itemCount: _movieList.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
